@@ -10,4 +10,4 @@
   * print a space
   * print endline
   
-## [Simple assembly problems](https://github.com/Quesmin/AssemblyStuff/blob/master)
+## [Simple assembly problems](https://github.com/Quesmin/AssemblyStuff/blob/master/assembly-solvings)
