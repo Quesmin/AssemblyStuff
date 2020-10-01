@@ -1,0 +1,70 @@
+; -----------------------------------------------------
+; -- 12. print max if odd no of elem, min otherwise ---
+; -----------------------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'  
+	MEM DB 256 DUP(?)
+	LEN DW ?
+	MAX DB ?
+	MIN DB ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	IN_NUM_STR MEM, LEN
+	XOR AX, AX
+	XOR CX, CX
+	
+	MOV SI, 0
+	MOV AL, MEM[SI]
+	MOV MAX, AL
+	MOV MIN, AL
+	INC SI
+	MOV CX, LEN
+	DEC CX
+	
+LUP:
+	MOV AL, MEM[SI]
+	CMP AL, MIN
+	JNL NEXT
+	MOV MIN, AL
+	
+NEXT:
+	CMP AL, MAX
+	JNG FINAL
+	MOV MAX, AL
+FINAL:
+	INC SI
+	LOOP LUP
+
+	OUTPUT
+	AND LEN, 1
+	JNZ ODD
+
+	OUT_NUM MIN
+	JMP EXIT
+	
+	
+ODD:
+	OUT_NUM MAX
+	
+EXIT:
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START
