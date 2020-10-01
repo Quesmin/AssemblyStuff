@@ -1,0 +1,66 @@
+; -----------------------------------------------------
+; -- ELIMINA PUNCTUATIE DIN STRING --------------------
+; -----------------------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'  
+	MEM DB 256 DUP(?)
+	LEN DW ?
+	CPY DB 256 DUP(?)
+	CHR DB ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	IN_STR MEM, LEN
+	
+	MOV SI, 0
+	MOV DI, 0
+	MOV CX, LEN
+	
+LUP1:
+	MOV AL, MEM[SI]
+	
+	CMP AL, 2EH
+	JE ENDL1
+	
+	CMP AL, 2CH
+	JE ENDL1
+	
+	CMP AL, 3BH
+	JE ENDL1
+	
+	CMP AL, 21H
+	JE ENDL1
+	
+	MOV CPY[DI], AL
+	INC DI
+
+ENDL1:
+	INC SI
+	LOOP LUP1
+	
+	MOV CPY[DI], '$'
+	
+	OUTPUT
+	OUT_STR CPY
+
+	
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START

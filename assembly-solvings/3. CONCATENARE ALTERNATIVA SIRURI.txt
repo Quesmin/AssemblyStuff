@@ -1,0 +1,59 @@
+; ----------------------------------------
+; -- 3. CONCATENARE ALTERNATIVA SIRURI ---
+; ----------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'
+	SIR1 DB 256 DUP(?)
+	LEN1 DW ?
+	SIR2 DB 256 DUP(?)
+	LEN2 DW ?
+	SIR3 DB 256 DUP(?)
+	LEN3 DW ?
+	SUM DB ?     
+	LNGTH DW ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	ENDLINE
+	IN_NUM_STR SIR1, LEN1
+	IN_NUM_STR SIR2, LEN2
+	MOV CX, LEN1
+	MOV DI, 0			; iterator for sir1, ascending
+	MOV BX, LEN2		; iterator for sir2, descending
+	SUB BX, 1
+	MOV SI, 0
+	
+LUP:
+	MOV AL, SIR1[DI]
+	MOV SIR3[SI], AL
+	INC DI
+	INC SI
+	MOV AL, SIR2[BX]
+	MOV SIR3[SI], AL
+	DEC BX
+	INC SI
+	LOOP LUP
+	
+	MOV LEN3, SI
+	OUTPUT
+	OUT_NUM_STR SIR3, LEN3
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START

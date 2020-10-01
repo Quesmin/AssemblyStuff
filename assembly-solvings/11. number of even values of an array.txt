@@ -1,0 +1,50 @@
+; -----------------------------------------------------
+; -- 11. number of even values of an array ------------
+; -----------------------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'  
+	MEM DB 256 DUP(?)
+	LEN DW ?
+	COUNT DB ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	IN_NUM_STR MEM, LEN
+	XOR AX, AX
+	XOR CX, CX
+	
+	MOV SI, 0
+	MOV CX, LEN
+	
+LUP:
+	MOV AL, MEM[SI]
+	AND AL, 1
+	JNZ FINAL
+	INC COUNT
+FINAL:
+	INC SI
+	LOOP LUP
+
+	OUTPUT
+	OUT_NUM COUNT
+	
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START

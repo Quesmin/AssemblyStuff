@@ -1,0 +1,63 @@
+; -----------------------------------------------------
+; -- 13. odd elem <- square, even elem <- *10 ---------
+; -----------------------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'  
+	MEM DB 256 DUP(?)
+	LEN DW ?
+	MAX DB ?
+	MIN DB ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	IN_NUM_STR MEM, LEN
+	XOR AX, AX
+	XOR CX, CX
+	XOR DX, DX
+	
+	MOV SI, 0
+	MOV CX, LEN
+	
+LUP:
+	MOV DL, MEM[SI]
+	MOV AL, MEM[SI]
+	AND DL, 1
+	JZ EVN
+	
+ODD:
+	MOV BL, AL
+	MUL BL
+	MOV MEM[SI], AL
+	JMP FINAL
+	
+EVN:
+	MOV BL, 10
+	MUL BL
+	MOV MEM[SI], AL
+	
+FINAL:
+	INC SI
+	LOOP LUP
+	
+	OUT_NUM_STR MEM, LEN
+	
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START

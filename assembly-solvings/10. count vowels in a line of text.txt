@@ -1,0 +1,60 @@
+; -----------------------------------------------------
+; -- 10. count vowels in a line of text ---------------
+; -----------------------------------------------------
+
+INCLUDE C:\TASM\colocviu\macro.mac
+
+DATA SEGMENT PARA PUBLIC 'DATA'  
+	MEM DB 256 DUP(?)
+	LEN DW ?
+	VOC DB "AEIOUaeiou"
+	COUNT DB ?
+DATA ENDS
+
+EXTRN OUT_PROC:FAR
+
+CODE SEGMENT PARA PUBLIC 'CODE'
+ASSUME CS:CODE, DS:DATA
+
+START PROC FAR
+	PUSH DS
+	XOR AX,AX
+	PUSH AX
+	MOV AX, DATA    
+	MOV DS, AX
+
+	INPUT
+	IN_STR MEM, LEN
+	XOR AX, AX
+	XOR CX, CX
+	
+	MOV SI, 0
+	MOV CX, LEN
+	
+LUP1:
+	MOV DI, 0
+LUP2:
+	MOV AL, MEM[SI]
+	CMP AL, VOC[DI]
+	JNE FINAL1
+	INC COUNT
+	JMP FINAL2
+FINAL1:
+	INC DI
+	CMP DI, 10
+	JNE LUP2
+	
+FINAL2:
+	INC SI
+	LOOP LUP1
+	
+	
+	OUTPUT
+	OUT_NUM COUNT
+	
+	RET 
+START ENDP
+	
+CODE ENDS
+
+END START
